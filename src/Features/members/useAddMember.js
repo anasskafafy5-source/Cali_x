@@ -15,6 +15,9 @@ export function useAddMember() {
       queryClient.invalidateQueries({
         queryKey: ["captain-stats"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["members_view"],
+      });
     },
     onError: () => toast.error("هناك خطا اثناء الاضافه حاول مجددا"),
   });
