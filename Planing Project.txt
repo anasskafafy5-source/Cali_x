@@ -61,31 +61,27 @@ members
 -------
 id 
 full_name
-withCaption_name
-captain_ID
+captain_name
+captain_id
 phone
 age
 notes
 
-subscription_price 
+subscription_price
+paid_amount
+remaining_amount
 
 subscription_start_date date
 subscription_end_date date
 
-payment_status => paid unPaid
 
 last_payment_date
 
-status
--- active
--- expired
-
-
 is_frozen boolean
 
-freeze_start_date date
+frozen_days
 
-freeze_end_date date
+freeze_reason
 
 
 captians
@@ -113,13 +109,31 @@ new_end_date
 
 settings:
 
-percentage of the gyme
-price of the session
-
+percentage 
+session_price
+expiring_soon_days
 gym_name
 
-telegram_chat_id
 
-renewal_reminder_days
 
-created_at
+
+//the final look at:
+
+
+Tables
+------
+members
+payments
+captains
+settings
+
+Views
+-----
+members_view
+captain_stats
+
+dashboard_stats
+dashboard_expiring_members
+dashboard_expired_members
+dashboard_frozen_members
+dashboard_remaining_members

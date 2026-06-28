@@ -1,57 +1,28 @@
 import { useForm } from "react-hook-form";
 import Button from "../../ui/Button";
-import Spinner from "../../ui/Spinner";
 import { useAddCaptain } from "./useAddCaptain";
-import { useUpdateCaptain } from "./useUpdateCaptain";
+import Spinner from "../../ui/Spinner";
 
-function CaptainForm({ captain = {}, onClose }) {
-  const isEditSession = Boolean(captain?.id);
-
-  const { addNewCaptainMutation, isPending: isAdding } = useAddCaptain();
-  const { updateCaptainMutation, isUpdating } = useUpdateCaptain();
-
-  const isWorking = isAdding || isUpdating;
+function CaptainForm({ onClose }) {
+  const { addNewCaptainMutation, isAdding} = useAddCaptain();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: isEditSession
-      ? {
-          full_name: captain.full_name,
-          phone: captain.phone,
-          subscription_price: captain.subscription_price,
-          notes: captain.notes,
-        }
-      : {},
-  });
+  } = useForm();
 
   function onSubmit(data) {
-    if (isEditSession) {
-      updateCaptainMutation(
-        {
-          id: captain.id,
-          updatedCaptain: data,
-        },
-        {
-          onSuccess: () => onClose?.(),
-        },
-      );
-    } else {
-      addNewCaptainMutation(data, {
-        onSuccess: () => onClose?.(),
-      });
-    }
+    const newCaptain = { ...data };
+    addNewCaptainMutation(newCaptain);
+    onClose?.();
   }
 
-  if (isWorking) return <Spinner />;
+  if (isAdding) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 p-6">
-      <h2 className="text-2xl font-bold">
-        {isEditSession ? "تعديل المدرب" : "إضافة مدرب"}
-      </h2>
+      <h2 className="text-2xl font-bold">إضافة مدرب</h2>
 
       {/* الاسم */}
       <div className="space-y-2">
@@ -60,8 +31,7 @@ function CaptainForm({ captain = {}, onClose }) {
         <input
           type="text"
           placeholder="اسم المدرب"
-          disabled={isWorking}
-          className="w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:bg-stone-100"
+          className="w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
           {...register("full_name", {
             required: "الاسم مطلوب",
           })}
@@ -79,8 +49,7 @@ function CaptainForm({ captain = {}, onClose }) {
         <input
           type="tel"
           placeholder="01xxxxxxxxx"
-          disabled={isWorking}
-          className="w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:bg-stone-100"
+          className="w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
           {...register("phone", {
             required: "رقم الهاتف مطلوب",
             pattern: {
@@ -102,8 +71,7 @@ function CaptainForm({ captain = {}, onClose }) {
         <input
           type="number"
           placeholder="سعر الاشتراك"
-          disabled={isWorking}
-          className="w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:bg-stone-100"
+          className="w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
           {...register("subscription_price", {
             required: "سعر الاشتراك مطلوب",
             valueAsNumber: true,
@@ -124,25 +92,18 @@ function CaptainForm({ captain = {}, onClose }) {
         <textarea
           rows={4}
           placeholder="اكتب أي ملاحظات..."
-          disabled={isWorking}
-          className="w-full resize-none rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:bg-stone-100"
+          className="w-full resize-none rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
           {...register("notes")}
         />
       </div>
 
+      {/* الأزرار */}
       <div className="flex justify-end gap-3 border-t pt-5">
-        <Button
-          type="button"
-          design="secondary"
-          onClick={onClose}
-          disabled={isWorking}
-        >
-          إلغاء
+        <Button onClick={onClose} type={"button"} design="secondary">
+          الغاء
         </Button>
 
-        <Button type="submit" disabled={isWorking}>
-          {isEditSession ? "حفظ التعديلات" : "حفظ"}
-        </Button>
+        <Button type="submit">حفظ</Button>
       </div>
     </form>
   );

@@ -7,7 +7,7 @@ function AddCaptainButton() {
   const [isOpen, setIsopen] = useState(false);
   return (
     <div>
-      <Button onClick={() => setIsopen(true)}>اضافه مدرب +</Button>
+      <Button size="big" onClick={() => setIsopen(true)}>اضافه مدرب +</Button>
       <Modal
         isOpen={isOpen}
         onClose={() => setIsopen(false)}

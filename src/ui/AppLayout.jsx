@@ -11,7 +11,7 @@ function AppLayout() {
       <Navbar />
       <Sidebar />
       <main
-        className={`mt-navbar sm:mr-sidebar box-border bg-stone-100 px-3 py-3 sm:px-3.5 sm:py-4`}
+        className={`mt-navbar sm:mr-sidebar  box-border bg-stone-50 px-3 py-3 sm:px-3.5 sm:py-4`}
         onClick={() => {
           if (window.innerWidth < 640) {
             setIsOpenSide(false);

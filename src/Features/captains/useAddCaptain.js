@@ -13,7 +13,7 @@ export function useAddCaptain() {
     mutationFn: (newCaptain) => createCaptain(newCaptain),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["captains"],
+        queryKey: ["captain-stats"],
       });
       toast.success("تم اضافه الكابتن بي نجاح");
     },

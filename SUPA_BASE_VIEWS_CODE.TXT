@@ -1,0 +1,115 @@
+[1]captain-states::
+DROP VIEW IF EXISTS captain_stats;
+
+CREATE VIEW captain_stats AS
+SELECT
+    c.id,
+    c.full_name,
+    c.phone,
+    c.subscription_price,
+    c.notes,
+
+    COUNT(m.id) AS members_count,
+
+    COALESCE(SUM(m.paid_amount), 0) AS total_revenue,
+
+    s.percentage AS gym_percentage,
+
+    (100 - s.percentage) AS captain_percentage,
+
+    COALESCE(SUM(m.paid_amount), 0) * s.percentage / 100 AS gym_share,
+
+    COALESCE(SUM(m.paid_amount), 0) * (100 - s.percentage) / 100 AS captain_share
+
+FROM captains c
+
+LEFT JOIN members m
+ON c.id = m.captain_id
+
+CROSS JOIN settings s
+
+GROUP BY
+    c.id,
+    c.full_name,
+    c.phone,
+    c.subscription_price,
+    c.notes,
+    s.percentage;
+
+
+[2] member
+
+CREATE VIEW members_view AS
+SELECT
+    m.id,
+    m.full_name,
+    m.captain_name,
+    m.captain_id,
+    m.phone,
+    m.age,
+    m.notes,
+
+    m.subscription_price,
+    m.paid_amount,
+    m.remaining_amount,
+
+    m.subscription_start_date,
+    m.subscription_end_date,
+    m.last_payment_date,
+
+    m.is_frozen,
+    m.frozen_days,
+    m.freeze_reason,
+
+    -- عدد الأيام المتبقية
+    (m.subscription_end_date - CURRENT_DATE) AS days_left,
+
+    -- هل عليه فلوس
+    (m.remaining_amount > 0) AS has_remaining,
+
+    -- حالة الاشتراك
+    CASE
+        WHEN m.is_frozen THEN 'frozen'
+
+        WHEN m.subscription_end_date < CURRENT_DATE THEN 'expired'
+
+        WHEN m.subscription_end_date <=
+            CURRENT_DATE + (
+                SELECT expiring_soon_days
+                FROM settings
+                LIMIT 1
+            )
+        THEN 'expiring'
+
+        ELSE 'active'
+    END AS subscription_status,
+
+    -- النص العربي
+    CASE
+        WHEN m.is_frozen THEN 'مجمد'
+        WHEN m.subscription_end_date < CURRENT_DATE THEN 'منتهي'
+        WHEN m.subscription_end_date <=
+            CURRENT_DATE + (
+                SELECT expiring_soon_days
+                FROM settings
+                LIMIT 1
+            )
+        THEN 'قرب ينتهي'
+        ELSE 'نشط'
+    END AS status_text,
+
+    -- اللون
+    CASE
+        WHEN m.is_frozen THEN 'blue'
+        WHEN m.subscription_end_date < CURRENT_DATE THEN 'red'
+        WHEN m.subscription_end_date <=
+            CURRENT_DATE + (
+                SELECT expiring_soon_days
+                FROM settings
+                LIMIT 1
+            )
+        THEN 'yellow'
+        ELSE 'green'
+    END AS status_color
+
+FROM members m;

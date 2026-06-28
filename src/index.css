@@ -1,19 +1,68 @@
 @import "tailwindcss";
 
+/* ===========================
+   Theme
+=========================== */
+
 @theme {
   --font-main: "IBM Plex Sans Arabic", sans-serif;
-  /* main colors */
-  --color-main-bg: #eee;
 
-  /* For the space of the sidebar and nav */
+  /* Colors */
+  --color-main-bg: #eeeeee;
+
+  /* Layout */
   --spacing-sidebar: 200px;
   --spacing-navbar: 50px;
+}
+
+/* ===========================
+   Global
+=========================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: var(--font-main);
 }
 
-* {
-  box-sizing: border-box;
+/* ===========================
+   React DatePicker
+=========================== */
+
+.react-datepicker {
+  @apply overflow-hidden rounded-2xl border-0 shadow-xl;
+}
+
+.react-datepicker__header {
+  @apply border-b-0 bg-orange-500;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  @apply font-semibold text-white;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  @apply rounded-full bg-orange-500 text-white;
+}
+
+.react-datepicker__day:hover {
+  @apply rounded-full bg-orange-200;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: white;
+}
+
+.react-datepicker__triangle {
+  display: none;
 }
