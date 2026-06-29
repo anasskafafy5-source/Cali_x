@@ -16,7 +16,6 @@ function CaptainDetArea() {
 
   if (isPending || isLoading) return <Spinner />;
   if (error || mError) return <Error />;
-  console.log(captainMembers);
   return (
     <div className="mt-5">
       {" "}

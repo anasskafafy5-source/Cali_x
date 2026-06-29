@@ -1,9 +1,5 @@
 function Payments() {
-    return (
-        <div>
-            صفحه المدفوعات
-        </div>
-    )
+  return <div>المدفوعات </div>;
 }
 
-export default Payments
+export default Payments;
