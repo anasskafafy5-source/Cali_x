@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import Button from "../../../ui/Button";
 import { buildFreezeData } from "../../../utils/helpers";
 import { useUpdateMemberData } from "../useUpdateMemberData";
+import Spinner from "../../../ui/Spinner";
+import { formatCurrency } from "../../../utils/helpers";
 
 function MemberFreezeForm({ member, onClose }) {
   const { updateMember: updateMemberMutation, isUpdating } =
@@ -24,7 +26,7 @@ function MemberFreezeForm({ member, onClose }) {
 
     onClose?.();
   }
-
+  if (isUpdating) return <Spinner />;
   return (
     <form
       onSubmit={handleSubmit(submit)}
@@ -46,7 +48,7 @@ function MemberFreezeForm({ member, onClose }) {
             }`}
           >
             {member.remaining_amount > 0
-              ? `متبقي ${member.remaining_amount} جنيه`
+              ? `متبقي ${formatCurrency(member.remaining_amount)} جنيه`
               : "مدفوع بالكامل"}
           </span>
         </div>
@@ -64,7 +66,9 @@ function MemberFreezeForm({ member, onClose }) {
 
           <div>
             <p className="text-gray-500">سعر الاشتراك</p>
-            <p className="font-semibold">{member.subscription_price} جنيه</p>
+            <p className="font-semibold">
+              {formatCurrency(member.subscription_price)} جنيه
+            </p>
           </div>
 
           <div>
@@ -75,7 +79,7 @@ function MemberFreezeForm({ member, onClose }) {
                 member.remaining_amount > 0 ? "text-red-600" : "text-green-600"
               }`}
             >
-              {member.remaining_amount} جنيه
+              {formatCurrency(member.remaining_amount)} جنيه
             </p>
           </div>
         </div>

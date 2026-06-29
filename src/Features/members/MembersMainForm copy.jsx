@@ -3,12 +3,18 @@ import Button from "../../ui/Button";
 import DatePickerInput from "../../ui/DatePickerInput";
 import { useCaptainStats } from "../captains/useCaptainState";
 import Spinner from "../../ui/Spinner";
-import { buildMemberData } from "../../utils/helpers";
+import { buildMemberData, buildUpdateMemberData } from "../../utils/helpers";
 import { useAddMember } from "./useAddMember";
+import { useUpdateMemberData } from "./useUpdateMemberData";
 
-function MembersMainForm({ onClose }) {
+function MembersMainForm({ onClose, member }) {
+  const isEditSession = Boolean(member);
+
   const { captainStats, isPending } = useCaptainStats();
   const { addMemberMutation } = useAddMember();
+  // for edit
+  const { updateMember: updateMemberMutation, isUpdating } =
+    useUpdateMemberData();
 
   const {
     register,
@@ -16,24 +22,46 @@ function MembersMainForm({ onClose }) {
     control,
     watch,
     formState: { errors },
-  } = useForm();
-
+  } = useForm({
+    defaultValues: {
+      full_name: member?.full_name || "",
+      captain: member?.captain_id || "",
+      phone: member?.phone || "",
+      age: member?.age || "",
+      subscription_price: member?.subscription_price || "",
+      subscription_start_date: member?.subscription_start_date
+        ? new Date(member.subscription_start_date)
+        : null,
+      subscription_end_date: member?.subscription_end_date
+        ? new Date(member.subscription_end_date)
+        : null,
+      paid_amount: member?.paid_amount || 0,
+      notes: member?.notes || "",
+    },
+  });
   const startDate = watch("subscription_start_date");
   const subscriptionPrice = watch("subscription_price");
   const paidAmount = watch("paid_amount") || 0;
   const remaining = subscriptionPrice - paidAmount;
 
   function onSubmit(data) {
-    const newMember = buildMemberData(data, captainStats);
-    addMemberMutation(newMember);
+    if (!isEditSession) {
+      const newMember = buildMemberData(data, captainStats);
+      addMemberMutation(newMember);
+    } else {
+      const temp = buildUpdateMemberData(data, captainStats, member);
+      updateMemberMutation({ id: member.id, memberData: temp });
+    }
     onClose?.();
   }
 
-  if (isPending) return <Spinner />;
+  if (isPending || isUpdating) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 p-6">
-      <h2 className="text-2xl font-bold">إضافه عضو</h2>
+      <h2 className="text-2xl font-bold">
+        {isEditSession ? "تعديل بيانات العضو" : "إضافه عضو جديد"}
+      </h2>
 
       {/* الاسم */}
       <div className="space-y-2">
@@ -57,7 +85,6 @@ function MembersMainForm({ onClose }) {
       <div className="space-y-2">
         <label className="block text-sm font-medium">المدرب</label>
         <select
-          defaultValue={""}
           className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:border-orange-500"
           {...register("captain", {
             required: "اختيار المدرب مطلوب",
@@ -231,7 +258,7 @@ function MembersMainForm({ onClose }) {
           الغاء
         </Button>
 
-        <Button type="submit">حفظ</Button>
+        <Button type="submit">{isEditSession ? "حفظ التغيرات" : "حفظ"}</Button>
       </div>
     </form>
   );

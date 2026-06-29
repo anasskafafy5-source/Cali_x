@@ -1,12 +1,13 @@
-export function formatCurrency(amount, fractionDigits = 2) {
-  if (amount === null || amount === undefined || isNaN(amount)) return "0.00";
+export function formatCurrency(value, fractionDigits = 0) {
+  const amount = Number(value);
 
-  return new Intl.NumberFormat("en-US", {
+  if (!Number.isFinite(amount)) return "0";
+
+  return amount.toLocaleString("en-US", {
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,
-  }).format(Number(amount));
+  });
 }
-
 // utils/formatDateForDB.js
 
 // utils/formatDateForDB.js
@@ -129,5 +130,40 @@ export function buildUpdateMemberData(values, captainState, member) {
     subscription_end_date: values.subscription_end_date
       ? formatDateForDB(values.subscription_end_date)
       : member.subscription_end_date,
+  };
+}
+
+// for remainig money
+
+export function buildPayRemainingData(values, member) {
+  const currentPaid = Number(member.paid_amount);
+  const currentRemaining = Number(member.remaining_amount);
+
+  const paymentAmount = Math.min(
+    Number(values.paid_amount) || 0,
+    currentRemaining,
+  );
+
+  return {
+    paid_amount: currentPaid + paymentAmount,
+    remaining_amount: currentRemaining - paymentAmount,
+    last_payment_date: formatDateForDB(new Date()),
+  };
+}
+
+// for end the freezing
+export function buildUnfreezeMemberData(member) {
+  const endDate = new Date(member.subscription_end_date);
+
+  endDate.setDate(endDate.getDate() - Number(member.frozen_days));
+
+  return {
+    is_frozen: false,
+
+    frozen_days: 0,
+
+    freeze_reason: "",
+
+    subscription_end_date: formatDateForDB(endDate),
   };
 }

@@ -54,3 +54,19 @@ export async function deleteMember(id) {
 
   return true;
 }
+
+// get member by id
+export async function getMemberStatsById(id) {
+  const { data, error } = await supabase
+    .from("members_view")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Couldn't get member stats");
+  }
+
+  return data;
+}

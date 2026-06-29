@@ -55,7 +55,7 @@ function MembersMainForm({ onClose, member }) {
     onClose?.();
   }
 
-  if (isPending) return <Spinner />;
+  if (isPending || isUpdating) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 p-6">

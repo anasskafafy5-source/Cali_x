@@ -71,7 +71,7 @@ SELECT
     CASE
         WHEN m.is_frozen THEN 'frozen'
 
-        WHEN m.subscription_end_date < CURRENT_DATE THEN 'expired'
+        WHEN m.subscription_end_date <= CURRENT_DATE THEN 'expired'
 
         WHEN m.subscription_end_date <=
             CURRENT_DATE + (
@@ -87,7 +87,9 @@ SELECT
     -- النص العربي
     CASE
         WHEN m.is_frozen THEN 'مجمد'
-        WHEN m.subscription_end_date < CURRENT_DATE THEN 'منتهي'
+
+        WHEN m.subscription_end_date <= CURRENT_DATE THEN 'منتهي'
+
         WHEN m.subscription_end_date <=
             CURRENT_DATE + (
                 SELECT expiring_soon_days
@@ -95,13 +97,16 @@ SELECT
                 LIMIT 1
             )
         THEN 'قرب ينتهي'
+
         ELSE 'نشط'
     END AS status_text,
 
     -- اللون
     CASE
         WHEN m.is_frozen THEN 'blue'
-        WHEN m.subscription_end_date < CURRENT_DATE THEN 'red'
+
+        WHEN m.subscription_end_date <= CURRENT_DATE THEN 'red'
+
         WHEN m.subscription_end_date <=
             CURRENT_DATE + (
                 SELECT expiring_soon_days
@@ -109,6 +114,7 @@ SELECT
                 LIMIT 1
             )
         THEN 'yellow'
+
         ELSE 'green'
     END AS status_color
 

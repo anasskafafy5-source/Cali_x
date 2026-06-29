@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import DatePickerInput from "../../../ui/DatePickerInput";
 import Button from "../../../ui/Button";
-import { buildRenewalData } from "../../../utils/helpers";
+import { buildRenewalData, formatCurrency } from "../../../utils/helpers";
 import { useUpdateMemberData } from "../useUpdateMemberData";
+import Spinner from "../../../ui/Spinner";
 
 function MemberRenewalForm({ member, onClose }) {
   const { updateMember: updateMemberMutation, isUpdating } =
@@ -33,7 +34,7 @@ function MemberRenewalForm({ member, onClose }) {
     updateMemberMutation({ id: Number(member.id), memberData: temp });
     onClose?.();
   }
-
+  if (isUpdating) return <Spinner />;
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 p-6">
       <h2 className="text-2xl font-bold">تجديد الاشتراك</h2>
@@ -51,13 +52,16 @@ function MemberRenewalForm({ member, onClose }) {
 
         <p>
           سعر الاشتراك:
-          <span className="font-semibold"> {subscriptionPrice} جنيه</span>
+          <span className="font-semibold">
+            {" "}
+            {formatCurrency(subscriptionPrice)} جنيه
+          </span>
         </p>
 
         {member.has_remaining && (
           <p className="font-medium text-red-700">
             متبقي من الاشتراك السابق:
-            <span> {member.remaining_amount} جنيه</span>
+            <span> {formatCurrency(member.remaining_amount)} جنيه</span>
           </p>
         )}
       </div>
@@ -124,17 +128,17 @@ function MemberRenewalForm({ member, onClose }) {
 
         <div className="flex justify-between">
           <span>سعر الاشتراك</span>
-          <span>{subscriptionPrice} جنيه</span>
+          <span>{formatCurrency(subscriptionPrice)} جنيه</span>
         </div>
 
         <div className="flex justify-between">
           <span>المدفوع</span>
-          <span>{paidAmount} جنيه</span>
+          <span>{formatCurrency(paidAmount)} جنيه</span>
         </div>
 
         <div className="flex justify-between font-semibold text-orange-600">
           <span>المتبقي</span>
-          <span>{remaining} جنيه</span>
+          <span>{formatCurrency(remaining)} جنيه</span>
         </div>
       </div>
 

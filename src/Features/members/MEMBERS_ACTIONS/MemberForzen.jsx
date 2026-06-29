@@ -16,6 +16,8 @@ function MemberForzen({ member }) {
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         {member.is_frozen ? (
           <Error title="لا يمكن التجميد " message="لاعب مجمد بالفعل" />
+        ) : member.subscription_status === "expired" ? (
+          <Error title="لا يمكن التجميد " message="الاعب اشتراكو منتهي" />
         ) : (
           <MemberFreezeForm member={member} />
         )}

@@ -4,23 +4,16 @@ import {
   FaUserTie,
   FaCalendarDays,
   FaClock,
-  FaEye,
-  FaRotate,
-  FaSnowflake,
-  FaPen,
-  FaTrash,
 } from "react-icons/fa6";
-import MemberViewDetails from "./MEMBERS_ACTIONS/MemberViewDetails";
-import Member_renewal from "./MEMBERS_ACTIONS/Member_renewal";
-import MemberForzen from "./MEMBERS_ACTIONS/MemberForzen";
-import EditMemberData from "./MEMBERS_ACTIONS/EditMemberData";
-import DeleteMember from "./MEMBERS_ACTIONS/DeleteMember";
+import MemberActionBar from "./MemberActionBar";
+import { formatCurrency } from "../../utils/helpers";
 
 function MemberCard({ member }) {
   const statusColors = {
     green: "bg-green-100 text-green-700",
     yellow: "bg-yellow-100 text-yellow-700",
     red: "bg-red-100 text-red-700",
+    blue: "bg-blue-100 text-blue-700 ring-1 ring-blue-200",
     gray: "bg-gray-100 text-gray-700",
   };
 
@@ -79,7 +72,21 @@ function MemberCard({ member }) {
                 المتبقي
               </span>
 
-              <span>{member.days_left} يوم</span>
+              <span
+                className={
+                  member.days_left < 0
+                    ? "font-semibold text-red-600"
+                    : member.days_left === 0
+                      ? "font-semibold text-orange-600"
+                      : "font-semibold text-green-600"
+                }
+              >
+                {member.days_left > 0
+                  ? `${member.days_left} يوم`
+                  : member.days_left === 0
+                    ? "آخر يوم"
+                    : `منتهي من ${Math.abs(member.days_left)} يوم`}
+              </span>
             </div>
           </div>
         </div>
@@ -89,22 +96,16 @@ function MemberCard({ member }) {
           <div className="flex flex-wrap items-center gap-2">
             <span
               className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                statusColors[member.status_color] || "bg-gray-100 text-gray-700"
+                statusColors[member.status_color] || statusColors.gray
               }`}
             >
               {member.status_text}
             </span>
 
             {member.has_remaining ? (
-              <>
-                <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
-                  💰 عليه {member.remaining_amount} ج.م
-                </span>
-
-                <button className="rounded-full bg-orange-500 px-4 py-1 text-xs font-semibold text-white transition hover:bg-orange-600">
-                  دفع الباقي
-                </button>
-              </>
+              <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
+                💰 عليه {formatCurrency(member.remaining_amount)} ج.م
+              </span>
             ) : (
               <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
                 💰 مدفوع بالكامل
@@ -114,23 +115,7 @@ function MemberCard({ member }) {
         </div>
 
         {/* Actions */}
-        <div className="border-t pt-4">
-          <h3 className="mb-3 text-sm font-semibold text-slate-600">
-            الإجراءات
-          </h3>
-
-          <div className="grid grid-cols-5 gap-2">
-            <MemberViewDetails id={member.id} />
-
-            <Member_renewal member={member} />
-
-            <MemberForzen member={member} />
-
-            <EditMemberData member={member} />
-
-            <DeleteMember member={member} />
-          </div>
-        </div>
+        <MemberActionBar member={member} />
       </div>
     </div>
   );
