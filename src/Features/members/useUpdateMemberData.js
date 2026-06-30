@@ -14,7 +14,10 @@ export function useUpdateMemberData() {
         queryKey: ["members_view"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["memberData" , Number(data.id)],
+        queryKey: ["memberData", Number(data.id)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["captain-members", String(data.captain_id)],
       });
     },
 

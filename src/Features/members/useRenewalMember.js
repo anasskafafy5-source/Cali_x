@@ -17,6 +17,9 @@ export function useRenewalMember() {
       queryClient.invalidateQueries({
         queryKey: ["memberData", Number(data.id)],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["captain-members", String(data.captain_id)],
+      });
     },
 
     onError: (err) => {

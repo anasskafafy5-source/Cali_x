@@ -68,14 +68,19 @@ export async function updateMember(id, memberData) {
 
 // delete member
 export async function deleteMember(id) {
-  const { error } = await supabase.from("members").delete().eq("id", id);
+  const { data, error } = await supabase
+    .from("members")
+    .delete()
+    .eq("id", id)
+    .select()
+    .single();
 
   if (error) {
     console.error(error);
     throw new Error("Failed to delete member");
   }
 
-  return true;
+  return data;
 }
 
 // get member by id

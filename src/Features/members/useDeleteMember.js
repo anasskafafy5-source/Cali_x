@@ -8,10 +8,13 @@ export function useDeleteMember() {
   const { mutate: removeMemberMutation, isPending: isDeleting } = useMutation({
     mutationFn: (id) => deleteMember(id),
 
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("تم الحذف بي نجاح");
       //   queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["members_view"] });
+      queryClient.invalidateQueries({
+        queryKey: ["captain-members", String(data.captain_id)],
+      });
     },
 
     onError: () => {

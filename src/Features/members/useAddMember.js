@@ -10,7 +10,7 @@ export function useAddMember() {
     error,
   } = useMutation({
     mutationFn: (newMember) => createMember(newMember),
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("تم الاضافه بي نجاح");
       queryClient.invalidateQueries({
         queryKey: ["captain-stats"],
@@ -18,6 +18,10 @@ export function useAddMember() {
       queryClient.invalidateQueries({
         queryKey: ["members_view"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["captain-members", String(data.captain_id)],
+      });
+      console.log(data.captain_id);
     },
     onError: () => toast.error("هناك خطا اثناء الاضافه حاول مجددا"),
   });
