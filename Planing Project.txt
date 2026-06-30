@@ -94,16 +94,34 @@ notes
 
 
 
-payments
---------
+transactions
+ -------
+ id
+ member_id 
+ captain_id
+ type_transaction:: [
+new_member
+debt_payment
+renewal
+session
+salary
+expense
+product
+ ]
+
+ direction
+
+ amount_paid
+ note 
+ paid_at
+
+sessions
+-----
 id
-member_id
-amount
-status => late , paid
-paid_at
-reson_paid
-old_end_date
-new_end_date
+member_name
+price => by settigs
+captain_id
+date
 
 
 
@@ -119,12 +137,12 @@ gym_name
 
 //the final look at:
 
-
 Tables
 ------
 members
-payments
 captains
+transactions
+sessions
 settings
 
 Views

@@ -219,7 +219,8 @@ function MembersMainForm({ onClose, member }) {
         <input
           type="number"
           placeholder="المبلغ المدفوع"
-          className="w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
+          className={`${isEditSession && "cursor-no-drop"} w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500 `}
+          disabled={isEditSession}
           {...register("paid_amount", {
             required: "المبلغ المدفوع!!",
             valueAsNumber: true,
@@ -233,6 +234,15 @@ function MembersMainForm({ onClose, member }) {
           <p className="text-sm text-red-600">{errors.paid_amount.message}</p>
         )}
       </div>
+
+      {/* if in edit */}
+      {isEditSession && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+          ⚠️ لا يمكن تعديل سعر الاشتراك أو المبلغ المدفوع من هنا، للحفاظ على
+          السجل المالي. استخدم عمليات الدفع أو التجديد لتسجيل أي حركة مالية.
+        </div>
+      )}
+
       {/* feed back */}
       {remaining > 0 && (
         <p className="text-sm font-medium text-orange-600">

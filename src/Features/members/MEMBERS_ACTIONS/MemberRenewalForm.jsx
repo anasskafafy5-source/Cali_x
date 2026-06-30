@@ -2,12 +2,11 @@ import { useForm } from "react-hook-form";
 import DatePickerInput from "../../../ui/DatePickerInput";
 import Button from "../../../ui/Button";
 import { buildRenewalData, formatCurrency } from "../../../utils/helpers";
-import { useUpdateMemberData } from "../useUpdateMemberData";
 import Spinner from "../../../ui/Spinner";
+import { useRenewalMember } from "../useRenewalMember";
 
 function MemberRenewalForm({ member, onClose }) {
-  const { updateMember: updateMemberMutation, isUpdating } =
-    useUpdateMemberData();
+  const { renewalMutation, isPending } = useRenewalMember();
 
   const {
     register,
@@ -31,10 +30,14 @@ function MemberRenewalForm({ member, onClose }) {
 
   function onSubmit(values) {
     const temp = buildRenewalData(values, member);
-    updateMemberMutation({ id: Number(member.id), memberData: temp });
+    renewalMutation({
+      id: Number(member.id),
+      memberData: temp,
+      amountPaid: values.paid_amount,
+    });
     onClose?.();
   }
-  if (isUpdating) return <Spinner />;
+  if (isPending) return <Spinner />;
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 p-6">
       <h2 className="text-2xl font-bold">تجديد الاشتراك</h2>

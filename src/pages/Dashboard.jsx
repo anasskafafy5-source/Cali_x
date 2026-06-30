@@ -1,9 +1,11 @@
+import AddSessionButton from "../Features/sessions/AddSessionButton";
+
 function Dashboard() {
-    return (
-        <div>
-            لوحه التحكم
-        </div>
-    )
+  return (
+    <div>
+      <AddSessionButton />
+    </div>
+  );
 }
 
-export default Dashboard
+export default Dashboard;

@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import Button from "../../../ui/Button";
-import { useUpdateMemberData } from "../useUpdateMemberData";
+import { usePayBackMember } from "../usePayBackMember";
+
 import Spinner from "../../../ui/Spinner";
 import { buildPayRemainingData } from "../../../utils/helpers";
 import { formatCurrency } from "../../../utils/helpers";
 
 function PayRemainingForm({ member, onClose }) {
-  const { updateMember: updateMemberMutation, isUpdating } =
-    useUpdateMemberData();
+  const { paybackMutation, isPending } = usePayBackMember();
 
   const {
     register,
@@ -29,15 +29,16 @@ function PayRemainingForm({ member, onClose }) {
   function onSubmit(data) {
     const updatedData = buildPayRemainingData(data, member);
 
-    updateMemberMutation({
+    paybackMutation({
       id: Number(member.id),
       memberData: updatedData,
+      amountPaid: data.paid_amount,
     });
 
     onClose?.();
   }
 
-  if (isUpdating) return <Spinner />;
+  if (isPending) return <Spinner />;
 
   return (
     <form
