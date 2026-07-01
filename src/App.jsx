@@ -7,7 +7,7 @@ import Members from "./pages/Members";
 import MemberDetails from "./pages/MemberDetails";
 import CaptainsPage from "./pages/CaptainsPage";
 import CaptainDetails from "./pages/CaptainDetails";
-import Payments from "./pages/Payments";
+import Transactions from "./pages/Transactions";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 
@@ -31,7 +31,7 @@ function App() {
             <Route path="/members/:id" element={<MemberDetails />} />
             <Route path="/captains" element={<CaptainsPage />} />
             <Route path="/captains/:id" element={<CaptainDetails />} />
-            <Route path="/payments" element={<Payments />} />
+            <Route path="/payments" element={<Transactions />} />
             <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
