@@ -8,6 +8,7 @@ export function useGetCaptainMembers(id) {
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
 
+  //[1] pagination
   const page = Number(searchParams.get("page")) || 1;
 
   const {
@@ -23,6 +24,10 @@ export function useGetCaptainMembers(id) {
   const pageCount = Math.ceil(
     (captainMembersCount || 0) / PAGE_SIZE_CAPTAINS_MEMBERS,
   );
+
+
+
+  //prefetch
 
   useEffect(() => {
     if (page >= pageCount) return;

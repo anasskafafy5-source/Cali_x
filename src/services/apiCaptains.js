@@ -68,11 +68,11 @@ export async function updateCaptain(id, updatedData) {
 // get all members with the captain
 export async function getCaptainMembers(id, page, pageSize) {
   let query = supabase
-    .from("members")
+    .from("members_view")
     .select("*", { count: "exact" })
     .eq("captain_id", id);
 
-    //[1] pagination
+  //[1] pagination
   if (page) {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;

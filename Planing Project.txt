@@ -158,3 +158,20 @@ dashboard_expiring_members
 dashboard_expired_members
 dashboard_frozen_members
 dashboard_remaining_members
+
+
+
+
+
+
+
+
+
+
+ني المشروع من الصفر كنت هعمله كده:
+✅ React
+✅ React Query
+✅ Supabase
+✅ Dexie (IndexedDB)
+✅ Service Worker علشان الموقع نفسه يفتح بدون نت.
+✅ Sync Queue.
